@@ -11,7 +11,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json()); //This allows the application to handle JSON data in request bodies.
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("HI.. Welcome");
 });
 app.use("/api/user", userRouter);

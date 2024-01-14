@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 
-const url = process.env.DB_URL;
-
 export const connectUsingMongoose = async () => {
   try {
-    await mongoose.connect(url, {
+    await mongoose.connect(process.env.DB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      writeConcern: {
+        w: "majority",
+      },
     });
 
     console.log("MongoDB connected using mongoose");

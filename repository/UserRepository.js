@@ -12,11 +12,10 @@ export default class UserRepository {
       const user = await UserModel.findOne({email});
       if (user) {
         // Destructure the likedMovies array from the user object
-        const {likedMovies} = user;
+        const {likedMovies} = user.toObject();
 
         // Check if the movie with the given id is already in the likedMovies array
         const movieAlreadyLiked = likedMovies.find(({id}) => id === data.id);
-        console.log(movieAlreadyLiked);
         if (!movieAlreadyLiked) {
           await UserModel.findByIdAndUpdate(
             user._id,
@@ -31,8 +30,7 @@ export default class UserRepository {
         }
       } else {
         // If the user does not exist, create a new user with the provided email and likedMovies data
-        const newUser = await UserModel.create({email, likedMovies: data});
-        console.log(newUser);
+        await UserModel.create({email, likedMovies: data});
       }
     } catch (err) {
       throw new ApplicationError("Something went wrong in database", 500);
@@ -61,11 +59,10 @@ export default class UserRepository {
         const movieIndex = likedMovies.findIndex(({id}) => id === movieID);
 
         // Remove the movie at the found index from the likedMovies array
-        const deletedMovie = likedMovies.splice(movieIndex, 1);
-        console.log(" deleted movie:", deletedMovie);
+        likedMovies.splice(movieIndex, 1);
 
         // Update the user's document with the modified likedMovies array
-        const updatedMovies = await UserModel.findByIdAndUpdate(
+        await UserModel.findByIdAndUpdate(
           user._id,
           {
             likedMovies,
@@ -75,7 +72,6 @@ export default class UserRepository {
           }
         );
 
-        console.log("updated movies:", likedMovies);
         // Return the modified likedMovies array
         return likedMovies;
       }
