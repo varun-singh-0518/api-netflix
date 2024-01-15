@@ -3,13 +3,18 @@ import dotenv from "dotenv";
 import cors from "cors";
 import {connectUsingMongoose} from "./confiq/mongoose.js";
 import userRouter from "./routes/UserRoutes.js";
+import bodyParser from "body-parser";
 
 const app = express();
 
 dotenv.config();
 
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use(bodyParser.json());
+
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "*",
   credentials: true,
 };
 
